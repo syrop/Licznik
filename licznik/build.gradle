@@ -8,7 +8,7 @@ android {
     buildToolsVersion '29.0.3'
 
     defaultConfig {
-        applicationId 'pl.org.seva.myapplication'
+        applicationId 'pl.org.seva.licznik'
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
@@ -49,7 +49,7 @@ dependencies {
     implementation 'org.kodein.di:kodein-di-conf-jvm:6.5.1'
 
     // Jetpack, AndroidX
-    implementation 'androidx.core:core-ktx:1.5.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.5.0-alpha03'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
