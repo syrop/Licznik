@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -16,7 +15,10 @@
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:textSize="96sp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="96sp"
+        android:autoSizeMaxTextSize="192sp"
+        android:autoSizeStepGranularity="2sp"
         android:text="0"
         tools:ignore="HardcodedText" />
 
