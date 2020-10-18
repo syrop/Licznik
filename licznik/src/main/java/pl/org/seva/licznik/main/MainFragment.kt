@@ -6,21 +6,26 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import kotlinx.android.synthetic.main.fr_main.*
 import pl.org.seva.licznik.R
 import pl.org.seva.licznik.main.extension.invoke
 
 class MainFragment : Fragment(R.layout.fr_main) {
 
+    private val vm by viewModels<VM>()
+
     var counter = 0
     set(value) {
         field = value
         number.text = field.toString()
+        vm.counter = value
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         setHasOptionsMenu(true)
+        counter = vm.counter
         button {
             counter++
         }
@@ -39,5 +44,9 @@ class MainFragment : Fragment(R.layout.fr_main) {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    class VM : ViewModel() {
+        var counter = 0
     }
 }
