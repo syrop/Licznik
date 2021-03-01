@@ -1,4 +1,4 @@
-package pl.org.seva.licznik.main.init
+package pl.org.seva.licznik.main.extension
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
