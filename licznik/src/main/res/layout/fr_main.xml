@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<data>
+    <variable
+        name="vm"
+        type="pl.org.seva.licznik.main.CounterVM"
+        />
+</data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -19,8 +28,8 @@
         android:autoSizeMinTextSize="96sp"
         android:autoSizeMaxTextSize="192sp"
         android:autoSizeStepGranularity="2sp"
-        android:text="0"
-        tools:ignore="HardcodedText" />
+        android:text="@{String.valueOf(vm.counter)}"
+        tools:text="0"/>
 
     <Button
         android:id="@+id/button"
@@ -32,3 +41,4 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

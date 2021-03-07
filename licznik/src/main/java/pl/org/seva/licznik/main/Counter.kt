@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 
 @Suppress("unused")
-class MyApplication : Application() {
+class Counter : Application() {
 
     override fun onCreate() {
         super.onCreate()
