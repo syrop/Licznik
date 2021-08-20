@@ -31,11 +31,12 @@
         android:text="@{String.valueOf(vm.counter)}"
         tools:text="0"/>
 
-    <Button
+    <com.google.android.material.divider.MaterialDivider
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:text=""
+        app:dividerColor="@color/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
