@@ -56,7 +56,12 @@ class MainFragment : Fragment(R.layout.fr_main) {
 
                     appear.text = value.toString()
                     appear.visibility = View.VISIBLE
-                    appear.animate().alpha(1.0F).setListener(null)
+                    appear.animate().alpha(1.0F)
+                        .setListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                appear.visibility = View.VISIBLE
+                            }
+                        })
                 }
         }
     }
