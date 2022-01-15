@@ -10,8 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.skip
 import kotlinx.coroutines.launch
 import pl.org.seva.licznik.R
 import pl.org.seva.licznik.databinding.FrMainBinding
@@ -38,14 +36,14 @@ class MainFragment : Fragment(R.layout.fr_main) {
         binding.button {
             vm.counter.value++
         }
-        binding.number.text = vm.counter.value.toString()
+        binding.evenNumber.text = vm.counter.value.toString()
 
         lifecycleScope.launch {
             vm.counter
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect { value ->
-                    val vanish = if (value.mod(2) == 0) binding.number else binding.numberOdd
-                    val appear = if (value.mod(2) == 0) binding.numberOdd else binding.number
+                    val vanish = if (value.mod(2) == 0) binding.oddNumber else binding.evenNumber
+                    val appear = if (value.mod(2) == 0) binding.evenNumber else binding.oddNumber
 
                     vanish.animate().alpha(0.0F)
                         .setListener(object : AnimatorListenerAdapter() {
@@ -74,6 +72,12 @@ class MainFragment : Fragment(R.layout.fr_main) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.reset -> {
+                if (vm.counter.value % 2 == 0) {
+                    binding.evenNumber.visibility = View.INVISIBLE
+                    binding.oddNumber.text = vm.counter.value.toString()
+                    binding.oddNumber.alpha = 1.0F
+                    binding.oddNumber.visibility = View.VISIBLE
+                }
                 vm.counter.value = 0
                 true
             }

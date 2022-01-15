@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/number"
+        android:id="@+id/even_number"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/button"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,13 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:textColor="@color/black"
+        tools:text="0"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="96sp"
         android:autoSizeMaxTextSize="192sp"
         android:autoSizeStepGranularity="2sp"/>
 
   <TextView
-      android:id="@+id/number_odd"
+      android:id="@+id/odd_number"
       app:layout_constraintTop_toTopOf="parent"
       app:layout_constraintBottom_toTopOf="@id/button"
       app:layout_constraintStart_toStartOf="parent"
@@ -31,10 +32,12 @@
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:textColor="@color/black"
+      tools:text="1"
       android:autoSizeTextType="uniform"
       android:autoSizeMinTextSize="96sp"
       android:autoSizeMaxTextSize="192sp"
       android:visibility="invisible"
+      tools:visibility="visible"
       android:autoSizeStepGranularity="2sp"/>
 
     <com.google.android.material.button.MaterialButton
@@ -45,7 +48,7 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         app:cornerRadius="0dp"
-        app:layout_constraintTop_toBottomOf="@id/number"
+        app:layout_constraintTop_toBottomOf="@id/even_number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
