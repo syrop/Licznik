@@ -9,11 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import pl.org.seva.licznik.R
 import pl.org.seva.licznik.databinding.FrMainBinding
 import pl.org.seva.licznik.main.extension.invoke
+import pl.org.seva.licznik.main.extension.prefs
+import androidx.core.content.edit
 
 class MainFragment : Fragment(R.layout.fr_main) {
 
@@ -33,8 +34,12 @@ class MainFragment : Fragment(R.layout.fr_main) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
+        vm.counter.value = prefs.getInt(STATE, 0)
         binding.button {
             vm.counter.value++
+            prefs.edit {
+                putInt(STATE, vm.counter.value)
+            }
         }
         binding.evenNumber.text = vm.counter.value.toString()
 
@@ -47,7 +52,7 @@ class MainFragment : Fragment(R.layout.fr_main) {
 
                     vanish.animate().alpha(0.0F)
                         .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
+                            override fun onAnimationEnd(animation: Animator) {
                                 vanish.visibility = View.INVISIBLE
                             }
                         })
@@ -56,7 +61,7 @@ class MainFragment : Fragment(R.layout.fr_main) {
                     appear.visibility = View.VISIBLE
                     appear.animate().alpha(1.0F)
                         .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
+                            override fun onAnimationEnd(animation: Animator) {
                                 appear.visibility = View.VISIBLE
                             }
                         })
@@ -79,9 +84,16 @@ class MainFragment : Fragment(R.layout.fr_main) {
                     binding.oddNumber.visibility = View.VISIBLE
                 }
                 vm.counter.value = 0
+                prefs.edit {
+                    putInt(STATE, 0)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        const val STATE = "state"
     }
 }
