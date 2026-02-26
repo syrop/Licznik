@@ -3,8 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk 36
-
     defaultConfig {
         applicationId 'pl.org.seva.licznik'
         minSdkVersion 26
