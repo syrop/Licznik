@@ -2,5 +2,6 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Material3.DynamicColors.Light">
+      <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>
