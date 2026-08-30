@@ -3,7 +3,9 @@ package pl.org.seva.licznik.main
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,6 +17,9 @@ import pl.org.seva.licznik.databinding.FrMainBinding
 import pl.org.seva.licznik.main.extension.invoke
 import pl.org.seva.licznik.main.extension.prefs
 import androidx.core.content.edit
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateMargins
 
 class MainFragment : Fragment(R.layout.fr_main) {
 
@@ -33,8 +38,20 @@ class MainFragment : Fragment(R.layout.fr_main) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setHasOptionsMenu(true)
         vm.counter.value = prefs.getInt(STATE, 0)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            // 1. Get Status Bar Height
+            val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+
+            val params = binding.statusBarBackground.layoutParams as ConstraintLayout.LayoutParams
+            params.height = statusBarHeight
+            binding.statusBarBackground.layoutParams = params
+
+            // Apply the combined height to your target view layoutParams or padding
+            insets
+        }
+
         binding.button {
             vm.counter.value++
             prefs.edit {
