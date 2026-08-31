@@ -2,10 +2,12 @@ package pl.org.seva.licznik.main
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -50,6 +52,17 @@ class MainFragment : Fragment(R.layout.fr_main) {
 
             // Apply the combined height to your target view layoutParams or padding
             insets
+        }
+
+        val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+
+        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            binding.button.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    com.google.android.material.R.color.material_dynamic_primary20,
+                )
+            )
         }
 
         binding.button {
