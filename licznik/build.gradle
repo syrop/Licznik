@@ -9,15 +9,16 @@ android {
         applicationId 'pl.org.seva.licznik'
         minSdkVersion 34
         targetSdkVersion 37
-        versionCode 14
-        versionName '1.3.2'
+        versionCode 15
+        versionName '1.3.3'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            optimization {
+              enable = true // Enables code and resource optimizations.
+            }
         }
     }
 
@@ -32,12 +33,8 @@ android {
   }
 
   compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
     namespace 'pl.org.seva.licznik'
