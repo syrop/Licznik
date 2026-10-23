@@ -1,29 +1,29 @@
 package pl.org.seva.licznik.main
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.NavigationUI
-import pl.org.seva.licznik.R
-import pl.org.seva.licznik.databinding.AcMainBinding
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
-    private val navController by lazy {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navHostFragment.navController
-    }
-
-    private lateinit var binding: AcMainBinding
+    private val vm by viewModels<CounterVM>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = AcMainBinding.inflate(layoutInflater, null, false)
-        setContentView(binding.root)
-        NavigationUI.setupActionBarWithNavController(this, navController)
+        enableEdgeToEdge()
+        setContent {
+            LicznikTheme {
+                val count by vm.counter.collectAsStateWithLifecycle()
+                CounterScreen(
+                    count = count,
+                    onIncrement = vm::increment,
+                    onReset = vm::reset,
+                )
+            }
+        }
     }
-
-    override fun onSupportNavigateUp() = navController.navigateUp()
 }
