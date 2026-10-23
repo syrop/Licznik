@@ -153,3 +153,15 @@ private fun CounterScreenPreview() {
         )
     }
 }
+
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CounterScreenDarkPreview() {
+    LicznikTheme(darkTheme = true) {
+        CounterScreen(
+            count = 0,
+            onIncrement = {},
+            onReset = {},
+        )
+    }
+}
