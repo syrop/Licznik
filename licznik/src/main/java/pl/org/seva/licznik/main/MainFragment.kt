@@ -4,10 +4,15 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.res.Configuration
 import android.os.Bundle
-import android.util.TypedValue
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -17,40 +22,49 @@ import kotlinx.coroutines.launch
 import pl.org.seva.licznik.R
 import pl.org.seva.licznik.databinding.FrMainBinding
 import pl.org.seva.licznik.main.extension.invoke
-import pl.org.seva.licznik.main.extension.prefs
-import androidx.core.content.edit
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateMargins
 
 class MainFragment : Fragment(R.layout.fr_main) {
 
     private val vm by viewModels<CounterVM>()
 
-    private lateinit var binding: FrMainBinding
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        setHasOptionsMenu(true)
-        binding = FrMainBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        vm.counter.value = prefs.getInt(STATE, 0)
+        val binding = FrMainBinding.bind(view)
+
+        requireActivity().addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.main, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return when (menuItem.itemId) {
+                        R.id.reset -> {
+                            if ((vm.counter.value % 2) == 0) {
+                                binding.evenNumber.animate().cancel()
+                                binding.oddNumber.animate().cancel()
+                                binding.evenNumber.visibility = View.INVISIBLE
+                                binding.oddNumber.text = vm.counter.value.toString()
+                                binding.oddNumber.alpha = 1.0F
+                                binding.oddNumber.visibility = View.VISIBLE
+                            }
+                            vm.reset()
+                            true
+                        }
+                        else -> false
+                    }
+                }
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED,
+        )
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
-            // 1. Get Status Bar Height
             val statusBarHeight = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
 
             val params = binding.statusBarBackground.layoutParams as ConstraintLayout.LayoutParams
             params.height = statusBarHeight
             binding.statusBarBackground.layoutParams = params
 
-            // Apply the combined height to your target view layoutParams or padding
             insets
         }
 
@@ -61,69 +75,53 @@ class MainFragment : Fragment(R.layout.fr_main) {
                 ContextCompat.getColor(
                     requireContext(),
                     com.google.android.material.R.color.material_dynamic_primary20,
-                )
+                ),
             )
         }
 
         binding.button {
-            vm.counter.value++
-            prefs.edit {
-                putInt(STATE, vm.counter.value)
-            }
+            vm.increment()
         }
         binding.evenNumber.text = vm.counter.value.toString()
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             vm.counter
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
                 .collect { value ->
                     val vanish = if (value.mod(2) == 0) binding.oddNumber else binding.evenNumber
                     val appear = if (value.mod(2) == 0) binding.evenNumber else binding.oddNumber
 
+                    vanish.animate().cancel()
+                    appear.animate().cancel()
+
                     vanish.animate().alpha(0.0F)
-                        .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                vanish.visibility = View.INVISIBLE
-                            }
-                        })
+                        .setListener(
+                            object : AnimatorListenerAdapter() {
+                                private var isCanceled = false
+
+                                override fun onAnimationCancel(animation: Animator) {
+                                    isCanceled = true
+                                }
+
+                                override fun onAnimationEnd(animation: Animator) {
+                                    if (!isCanceled) {
+                                        vanish.visibility = View.INVISIBLE
+                                    }
+                                }
+                            },
+                        )
 
                     appear.text = value.toString()
                     appear.visibility = View.VISIBLE
                     appear.animate().alpha(1.0F)
-                        .setListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator) {
-                                appear.visibility = View.VISIBLE
-                            }
-                        })
+                        .setListener(
+                            object : AnimatorListenerAdapter() {
+                                override fun onAnimationEnd(animation: Animator) {
+                                    appear.visibility = View.VISIBLE
+                                }
+                            },
+                        )
                 }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.reset -> {
-                if (vm.counter.value % 2 == 0) {
-                    binding.evenNumber.visibility = View.INVISIBLE
-                    binding.oddNumber.text = vm.counter.value.toString()
-                    binding.oddNumber.alpha = 1.0F
-                    binding.oddNumber.visibility = View.VISIBLE
-                }
-                vm.counter.value = 0
-                prefs.edit {
-                    putInt(STATE, 0)
-                }
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    companion object {
-        const val STATE = "state"
     }
 }

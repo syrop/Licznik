@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdk 37
+    compileSdkVersion 37
 
     defaultConfig {
         applicationId 'pl.org.seva.licznik'
@@ -17,22 +16,16 @@ android {
     buildTypes {
         release {
             optimization {
-              enable = true // Enables code and resource optimizations.
+                enable = true // Enables code and resource optimizations.
             }
         }
     }
 
     buildFeatures {
-      viewBinding true
+        viewBinding true
     }
-  packagingOptions {
-    resources {
-      excludes +=
-          ['META-INF/rxjava.properties', 'META-INF/main.kotlin_module', 'META-INF/atomicfu.kotlin_module']
-    }
-  }
 
-  compileOptions {
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_21
         targetCompatibility JavaVersion.VERSION_21
     }
@@ -43,26 +36,17 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    // Kotlin, Kodein
+    // Kotlin
     implementation libs.kotlinx.coroutines.android
-    implementation libs.kotlinx.coroutines.rx2
 
     // Jetpack, AndroidX
     implementation libs.androidx.core.ktx
-    implementation libs.androidx.lifecycle.extensions1
     implementation libs.androidx.lifecycle.viewmodel.ktx
-    implementation libs.androidx.lifecycle.livedata.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
     implementation libs.androidx.navigation.fragment.ktx
     implementation libs.androidx.navigation.ui.ktx
     implementation libs.androidx.constraintlayout
     implementation libs.material
-
-    // GSON
-    implementation libs.gson
-
-    // RxKotlin
-    implementation libs.rxkotlin
 
     // Testing
     androidTestImplementation libs.androidx.core
@@ -75,6 +59,4 @@ dependencies {
     androidTestImplementation libs.kotlinx.coroutines.test
     testImplementation libs.junit
     testImplementation libs.kotlinx.coroutines.test
-    implementation libs.espresso.idling.resource
-    androidTestImplementation libs.espresso.idling.resource
 }
